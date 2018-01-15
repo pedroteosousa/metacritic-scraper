@@ -1,0 +1,28 @@
+{
+  "name": "metacritic-api",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pedroteosousa/metacritic-api.git"
+  },
+  "keywords": [
+    "metacritic",
+    "api"
+  ],
+  "author": "Pedro Sousa <pedroteosousa@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pedroteosousa/metacritic-api/issues"
+  },
+  "homepage": "https://github.com/pedroteosousa/metacritic-api#readme",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.2",
+    "events": "^1.1.1",
+    "request": "^2.83.0"
+  }
+}
