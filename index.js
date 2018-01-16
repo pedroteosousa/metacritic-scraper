@@ -3,15 +3,20 @@ var cheerio = require('cheerio')
 const events = require('events')
 
 const urls = {
-	search : 'http://metacritic.com/search/[1]/[2]/results'
+	base : 'http://metacritic.com',
+	search : '/search/[1]/[2]/results?page=0'
 }
 
+var search_options_default = {
+	category: 'all',
+	max: 1000
+}
 const product_info = {
 	title: {find: '.product_title a'},
 	type: {find:'.result_type strong'},
 	platform: {find: '.result_type .platform'},
-	metascore: {find:'.metascore_w'},
-	release_date: {find:'.release_date .data'},
+	metascore: {find: '.metascore_w'},
+	release_date: {find: '.release_date .data'},
 	rating: {find: '.rating .data'},
 	cast: {find: '.cast .data', delimiter: ','},
 	genre: {find: '.genre .data', delimiter: ','},
@@ -19,6 +24,14 @@ const product_info = {
 	runtime: {find: '.runtime .data'},
 	summary: {find: '.deck'},
 	publishers: {find: '.publisher .data', delimiter: ','}
+}
+
+const review_info = {
+	score: {find: '.metascore_w'},
+	source: {find: '.title .source'},
+	author: {find: '.title .author'},
+	date: {find: '.title .date'},
+	summary: {find: '.summary .no_hover'},
 }
 
 var make_request = function (url) {
@@ -61,63 +74,79 @@ var filter_object = function (object) {
 	}
 }
 
+var getReviews = function (product) {
+	var emitter = new events ()
+
+	var results = []
+	url = urls.base + product.href + '/critic-reviews'
+	make_request(url)
+		.on('end', (data) => {
+			const $ = cheerio.load(data)
+			$('.review').filter((h) => {
+				var data = $($('.review')[h])
+		
+				//remove ads
+				if (data.find('.metascore_w').text() == '')
+					return
+		
+				var review = {}
+				for (var i in review_info) {
+					review[i] = data.find(review_info[i].find).text().trim()
+					var delimiter = review_info[i].delimiter
+					if (delimiter !== undefined) {
+						var array = review[i].split(delimiter)
+						review[i] = array.map((v) => {return v.trim()})
+					}
+				}
+				review['href'] = data.find('.summary .read_full').attr('href').trim()
+				filter_object(review)
+				results.push(review)
+			})
+			emitter.emit('end', results)
+		})
+		.on('error', (error) => {
+			emitter.emit('error', error)
+		})
+	return emitter
+}
+
 var search = function (text, options = {}) {
 	var emitter = new events ()
 	
-	var options_default = {
-		category: 'all',
-		max: 1000
-	}
-	for (var i in options_default) {
+	for (var i in search_options_default) {
 		if (options[i] === undefined)
-			options[i] = options_default[i]
+			options[i] = search_options_default[i]
 	}
 
 	var results = []
-	if (typeof options.category === 'string') {
-		url = replace(urls.search, [options.category, text])
-		make_request(url)
-			.on('end', (data) => {
-				const $ = cheerio.load(data)
-				$('.result').filter((h) => {
-					var data = $($('.result')[h])
-					var product = {}
-					for (var i in product_info) {
-						product[i] = data.find(product_info[i].find).text().trim()
-						var delimiter = product_info[i].delimiter
-						if (delimiter !== undefined) {
-							var array = product[i].split(delimiter)
-							product[i] = array.map((v) => {return v.trim()})
-						}
+	url = replace(urls.base + urls.search, [options.category, text])
+	make_request(url)
+		.on('end', (data) => {
+			const $ = cheerio.load(data)
+			$('.result').filter((h) => {
+				var data = $($('.result')[h])
+				var product = {}
+				for (var i in product_info) {
+					product[i] = data.find(product_info[i].find).text().trim()
+					var delimiter = product_info[i].delimiter
+					if (delimiter !== undefined) {
+						var array = product[i].split(delimiter)
+						product[i] = array.map((v) => {return v.trim()})
 					}
-					filter_object(product)
-					results.push(product)
-				})
-				emitter.emit('end', results.slice(0, options.max))
+				}
+				product['href'] = data.find('.product_title a').attr('href').trim()
+				filter_object(product)
+				results.push(product)
 			})
-			.on('error', (error) => {
-				emitter.emit('error', error)
-			})
-	} else {
-		var temp_options = JSON.parse(JSON.stringify(options))
-		var num_done = 0
-		for (var i in options.category) {
-			temp_options.category = options.category[i]
-			search(text, temp_options)
-				.on('end', (res) => {
-					results = results.concat(res).slice(0, options.max)
-					num_done++
-					if (num_done == options.category.length)
-						emitter.emit('end', results)
-				})
-				.on('error', (error) => {
-					emitter.emit('error', error)
-				})
-		}
-	}
+			emitter.emit('end', results.slice(0, options.max))
+		})
+		.on('error', (error) => {
+			emitter.emit('error', error)
+		})
 	return emitter
 }
 
 module.exports = {
-	search : search
+	search : search,
+	getReviews: getReviews
 }
