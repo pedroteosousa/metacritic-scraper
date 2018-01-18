@@ -1,6 +1,6 @@
 var metacritic = require('./index')
 
-metacritic.search('blade runner').on('end', (results) => {
+metacritic.searchProduct('blade runner', {category: 'movie'}).on('end', (results) => {
 	metacritic.getReviews(results[0]).on('end', (reviews) => {
 		console.log(reviews)
 	})
