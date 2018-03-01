@@ -1,4 +1,4 @@
-#Metacritic Scraper
+# Metacritic Scraper
 A node package for getting information from the [Metacritic](http://www.metacritic.com/) website
 
 ## A bit of information
@@ -10,11 +10,11 @@ Also note that this package does **not**, by any means, exhaust the full list of
 This package has a few dependencies. To install them, run `npm install`
 
 ## Usage
-This package mainly works by using the `search` function and feeding it's results to the other functions. For example, getting critic reviews for the movie *The Shape of Water* works like this:
+This package mainly works by using the `search` function and feeding it's results to the other functions. For example, getting critic reviews for the movie *Sausage Party* works like this:
 ```js
 const metacritic = require('metacritic-scraper')
 
-metacritic.search('shape water', {category: 'movie'}).on('end', (results) => {
+metacritic.search('sausage party', {category: 'movie'}).on('end', (results) => {
 	// this assumes that the movie will be the first result
 	metacritic.getProduct(results[0]).on('end', (info) => {
 		console.log(info.reviews.critic_reviews)
