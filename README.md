@@ -1,5 +1,5 @@
 #Metacritic Scraper
-A node package for getting information from the [metacritic](http://www.metacritic.com/) website
+A node package for getting information from the [Metacritic](http://www.metacritic.com/) website
 
 ## A bit of information
 Note that this package is very much a scraper, and therefore, *may stop working as aspected on any design change of the Metacritic website*. If this happens, feel free to leave an issue on this repository so I can do something about it, or even better, leave a pull request with a fix.
