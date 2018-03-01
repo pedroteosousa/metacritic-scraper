@@ -1,9 +1,7 @@
-var product = require('./lib/search')
-var reviews = require('./lib/reviews')
-var movie = require('./lib/movie')
+var search = require('./lib/search')
+var product = require('./lib/product')
 
 module.exports = {
-	search: product.search,
-	getReviews: reviews.getReviews,
-	getMovie: movie.getMovie
+	search: search.find,
+	getProduct: product.getProduct
 }

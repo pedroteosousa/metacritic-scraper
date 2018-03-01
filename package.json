@@ -1,5 +1,5 @@
 {
-  "name": "metacritic-api",
+  "name": "metacritic-scraper",
   "version": "0.2.0",
   "description": "",
   "main": "index.js",
@@ -8,18 +8,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pedroteosousa/metacritic-api.git"
+    "url": "git+https://github.com/pedroteosousa/metacritic-scraper.git"
   },
   "keywords": [
     "metacritic",
+    "scraper",
     "api"
   ],
   "author": "Pedro Sousa <pedroteosousa@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pedroteosousa/metacritic-api/issues"
+    "url": "https://github.com/pedroteosousa/metacritic-scraper/issues"
   },
-  "homepage": "https://github.com/pedroteosousa/metacritic-api#readme",
+  "homepage": "https://github.com/pedroteosousa/metacritic-scraper#readme",
   "dependencies": {
     "cheerio": "^1.0.0-rc.2",
     "events": "^1.1.1",
