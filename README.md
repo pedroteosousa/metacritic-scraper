@@ -7,7 +7,7 @@ Note that this package is very much a scraper, and therefore, *may stop working 
 Also note that this package does **not**, by any means, exhaust the full list of Metacritic features, for now, it only supports getting information from movies. That being said, I do intend to complete this list eventually, even if it might take a while.
 
 ## Installing
-This package has a few dependencies. To install them, run `npm install`
+Run `npm install metacritic-scraper` to install this package. 
 
 ## Usage
 This package mainly works by using the `search` function and feeding it's results to the other functions. For example, getting critic reviews for the movie *Sausage Party* works like this:
