@@ -1,4 +1,6 @@
 # Metacritic Scraper
+[![npm version](https://badge.fury.io/js/metacritic-scraper.svg)](https://badge.fury.io/js/metacritic-scraper)
+
 A node package for getting information from the [Metacritic](http://www.metacritic.com/) website
 
 ## A bit of information
